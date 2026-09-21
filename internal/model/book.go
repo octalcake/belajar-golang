@@ -2,9 +2,11 @@ package model
 
 import (
 	"encoding/json"
+	"time"
 )
 
-type BookInput struct {
+type Book struct {
+	ID    int
 	Title string `json:"title" binding:"required,"`
 	Price int    `json:"price" binding:"required,number"`
 
@@ -14,4 +16,8 @@ type BookInput struct {
 
 	//alias JSON dalam go
 	//Subtitle string `json:"sub_title"`
+	Descrition string
+	Rating     int
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 }

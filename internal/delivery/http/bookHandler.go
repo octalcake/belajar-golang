@@ -41,7 +41,7 @@ func (h *BookHandler) GetTitle(ctx *gin.Context) {
 }
 
 func (h *BookHandler) PostBookHandler(ctx *gin.Context) {
-	var BookInput model.BookInput
+	var BookInput model.Book
 
 	err := ctx.ShouldBindJSON(BookInput)
 	if err != nil {
