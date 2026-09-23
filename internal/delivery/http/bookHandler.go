@@ -6,16 +6,21 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"gorm.io/gorm"
 
 	"giparbelajar.id/belajar-rest-api-golang/internal/model"
 )
 
 // untuk dependency injection nantinya
 // apabila handler perlu. eg. middleware
-type BookHandler struct{}
+type BookHandler struct {
+	db *gorm.DB
+}
 
-func NewBookHandler() *BookHandler {
-	return &BookHandler{}
+func NewBookHandler(db *gorm.DB) *BookHandler {
+	return &BookHandler{
+		db: db,
+	}
 }
 
 func (h *BookHandler) CheckHealth(ctx *gin.Context) {
@@ -59,10 +64,35 @@ func (h *BookHandler) PostBookHandler(ctx *gin.Context) {
 
 	}
 
+	//preparation untuk CRUD menggunakan db.[operasi CRUD]
 	ctx.JSON(http.StatusOK, gin.H{
-		"title": BookInput.Title,
-		"price": BookInput.Price,
+		"title":      BookInput.Title,
+		"price":      BookInput.Price,
+		"page_count": BookInput.PageCount,
+		"rating":     BookInput.Rating,
+		"descrition": BookInput.Description,
 		// "Subtitle": BookInput.Subtitle,
 	})
+}
 
+func (h *BookHandler) CreateBook(ctx *gin.Context) {
+	var book model.Book
+
+	if err := ctx.ShouldBindJSON(&book); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error()})
+		return
+	}
+
+	result := h.db.Create(&book)
+	if result.Error != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": result.Error.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, gin.H{
+		"message": "Buku berhasil ditambahkan",
+		"data":    book,
+	})
 }

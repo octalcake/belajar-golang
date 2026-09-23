@@ -1,23 +1,16 @@
 package model
 
 import (
-	"encoding/json"
 	"time"
 )
 
 type Book struct {
-	ID    int
-	Title string `json:"title" binding:"required,"`
-	Price int    `json:"price" binding:"required,number"`
-
-	// bisa menggunakan json.[Item] untuk menghindari internal server error
-	// akibat error yang dilewati oleh go validator
-	PageCount json.Number `json:"pageCount" binding:"required,number"`
-
-	//alias JSON dalam go
-	//Subtitle string `json:"sub_title"`
-	Descrition string
-	Rating     int
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	ID          int       `gorm:"primaryKey" json:"id"`
+	Title       string    `json:"title" binding:"required"`
+	Price       int       `json:"price" binding:"required,gt=0"`
+	PageCount   int       `json:"page_count" binding:"required,gt=0"`
+	Description string    `json:"description"`
+	Rating      int       `json:"rating"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }

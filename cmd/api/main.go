@@ -10,7 +10,7 @@ func main() {
 	db := connection.ConnectDatabase()
 	db.AutoMigrate(&model.Book{})
 
-	bookHandler := http.NewBookHandler()
+	bookHandler := http.NewBookHandler(db)
 	router := http.SetupRouter(bookHandler)
 	router.Run()
 }

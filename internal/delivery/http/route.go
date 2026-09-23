@@ -18,6 +18,8 @@ func SetupRouter(BookHandler *BookHandler) *gin.Engine {
 			//path variables
 			v1.GET("/getId/:id", BookHandler.GetId)
 			v1.POST("/books", BookHandler.PostBookHandler)
+			v1.POST("/create-book", BookHandler.CreateBook)
+
 		}
 	}
 	return router
